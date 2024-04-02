@@ -13,7 +13,7 @@ def extract_monthly_averages(folder_path, monthly_avg_fields):
             
             # Read the CSV file into a DataFrame
             df = pd.read_csv(file_path,low_memory=False)
-            
+
             # Define the regex pattern to match any number followed by 's'
             pattern = r'(\d+)s'
 
@@ -32,9 +32,20 @@ def extract_monthly_averages(folder_path, monthly_avg_fields):
                 if not df[field].isnull().all():
                     # Extract the monthly average for each month
                     for month in range(1, 13):
-                        monthly_avg = df[df['MONTH'] == month][field].mean()
+                        # Check if data exists for the current month
+                        if any(df['MONTH'] == month):
+                            # Extract the last value for the current month
+                            monthly_data = df[df['MONTH'] == month][field].dropna().astype('float')
+                            if not monthly_data.empty:
+                                monthly_avg = monthly_data.iloc[-1]  # Extract last non-NaN value
+                            else:
+                                monthly_avg = np.nan  # All values are NaN for this month
+                        else:
+                            # No data exists for the current month, append NaN
+                            monthly_avg = np.nan
+                        # Append the monthly average to the corresponding field in monthly_averages dictionary
                         monthly_averages[field].append(monthly_avg)
-            
+                        
             # Append the dictionary containing monthly averages for the current CSV file to the list
             monthly_averages_list.append(monthly_averages)
     
@@ -42,7 +53,7 @@ def extract_monthly_averages(folder_path, monthly_avg_fields):
 
 def create_csv_from_dict(data_list):
     # Get the field names from the keys of the dictionary
-    field_names = ['Month'] + list(data_list[0].keys())  # Include 'Month' as the first field
+    field_names = ['Month'] + list(data_list[0].keys())  # Include 'Location' and 'Month' as the first and second field
     
     # Define the output file path
     output_file = os.path.join('outputs', 'prepare_output.csv')
