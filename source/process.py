@@ -12,8 +12,13 @@ def extract_monthly_averages(folder_path, monthly_avg_fields):
             file_path = os.path.join(folder_path, file_name)
             
             # Read the CSV file into a DataFrame
-            df = pd.read_csv(file_path)
+            df = pd.read_csv(file_path,low_memory=False)
             
+            # Define the regex pattern to match any number followed by 's'
+            pattern = r'(\d+)s'
+
+            # Apply regex substitution to all columns in the DataFrame
+            df = df.replace(regex={pattern: r'\1'})
             # Extract month from date column
             df['MONTH'] = df['DATE'].apply(lambda date: int(date.split('-')[1]))
             
@@ -26,7 +31,7 @@ def extract_monthly_averages(folder_path, monthly_avg_fields):
                 if not df[field].isnull().all():
                     # Extract the monthly average for each month
                     for month in range(1, 13):
-                        monthly_avg = df[df['MONTH'] == month][field].mean()
+                        monthly_avg = df[df['MONTH'] == month][field].astype('float').mean()
                         monthly_averages[field].append(monthly_avg)
             
             # Append the dictionary containing monthly averages for the current CSV file to the list
