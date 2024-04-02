@@ -83,24 +83,18 @@ if __name__ == "__main__":
 
     folder_path = 'data'
 
-    all_daily_avg_fields = ['DailyAverageRelativeHumidity', 
-                        'DailyAverageDewPointTemperature', 
-                        'DailyAverageDryBulbTemperature', 
-                        'DailyAverageSeaLevelPressure',
-                        'DailyAverageStationPressure', 
-                        'DailyMaximumDryBulbTemperature', 
-                        'DailyMinimumDryBulbTemperature', 
-                        'DailyAverageWetBulbTemperature']
+    all_daily_avg_fields = ['DailyAverageDryBulbTemperature', 
+                            'DailyMaximumDryBulbTemperature', 
+                            'DailyMinimumDryBulbTemperature',
+                            'DailyAverageSeaLevelPressure',
+                            'DailyAverageStationPressure']
 
 
-    all_monthly_avg_fields = ['MonthlyAverageRH', 
-                          'MonthlyDewpointTemperature',
-                          'MonthlyMeanTemperature', 
-                          'MonthlySeaLevelPressure', 
-                          'MonthlyStationPressure', 
-                          'MonthlyMaximumTemperature', 
-                          'MonthlyMinimumTemperature', 
-                          'MonthlyWetBulb']
+    all_monthly_avg_fields = ['MonthlyMeanTemperature', 
+                              'MonthlyMaximumTemperature', 
+                              'MonthlyMinimumTemperature',
+                              'MonthlySeaLevelPressure', 
+                              'MonthlyStationPressure',]
 
     text_file_path = 'outputs/daily_fields_list.txt'
 

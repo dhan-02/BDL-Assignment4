@@ -54,24 +54,18 @@ def download_csv(base_url, year, n_locs):
 
     # Multiple tests showed that only for these fields we have both daily and monthly data, that too for very few csv files
     # Almost no csv files contained data for other pairs of daily and monthly fields
-    daily_avg_fields = ['DailyAverageRelativeHumidity', 
-                        'DailyAverageDewPointTemperature', 
-                        'DailyAverageDryBulbTemperature', 
-                        'DailyAverageSeaLevelPressure',
-                        'DailyAverageStationPressure', 
+    daily_avg_fields = ['DailyAverageDryBulbTemperature', 
                         'DailyMaximumDryBulbTemperature', 
-                        'DailyMinimumDryBulbTemperature', 
-                        'DailyAverageWetBulbTemperature']
+                        'DailyMinimumDryBulbTemperature',
+                        'DailyAverageSeaLevelPressure',
+                        'DailyAverageStationPressure']
 
 
-    monthly_avg_fields = ['MonthlyAverageRH', 
-                          'MonthlyDewpointTemperature',
-                          'MonthlyMeanTemperature', 
-                          'MonthlySeaLevelPressure', 
-                          'MonthlyStationPressure', 
+    monthly_avg_fields = ['MonthlyMeanTemperature', 
                           'MonthlyMaximumTemperature', 
-                          'MonthlyMinimumTemperature', 
-                          'MonthlyWetBulb']
+                          'MonthlyMinimumTemperature',
+                          'MonthlySeaLevelPressure', 
+                          'MonthlyStationPressure',]
 
     valid_file_count = 0
     for file_name in list_files:
