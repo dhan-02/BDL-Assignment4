@@ -3,7 +3,6 @@ from sklearn.metrics import r2_score
 import csv
 import pandas as pd
 
-
 def read_mycsv(file_path):
     data = []
     with open(file_path, 'r') as csvfile:
@@ -29,7 +28,7 @@ def compute_r2(monthly_avg_gt_file, monthly_avg_est_file):
         nan_fields_indices = []  # List to store field indices with all NaN values
         
         # Iterate over each field
-        for j in range(1, len(gt_avg[0])):
+        for j in range(2, len(gt_avg[0])):
             field_gt_avg = [row[j] for row in gt_avg]
             field_est_avg = [row[j] for row in est_avg]  
             # Check if all values in the field are NaN
@@ -39,7 +38,7 @@ def compute_r2(monthly_avg_gt_file, monthly_avg_est_file):
         r2_location = []
         
         # Iterate over each field
-        for j in range(1, len(gt_avg[0])):
+        for j in range(2, len(gt_avg[0])):
             if j not in nan_fields_indices:
                 field_gt_avg = [row[j] for row in gt_avg]
                 field_est_avg = [row[j] for row in est_avg]
@@ -65,16 +64,21 @@ def get_field_names(file_path):
     with open(file_path, 'r') as csvfile:
         reader = csv.reader(csvfile)
         headers = next(reader)  # Get the header row
-    return headers[1:] # first row is month
+    return headers[2:] # first column is Location, second column is Month
 
-def convert_to_csv(output_file, r2_values, field_names):
+def get_locations(file_path):
+    df = pd.read_csv(file_path)
+    unique_locations = df['Location'].unique()
+    return unique_locations
+
+def convert_to_csv(output_file, r2_values, field_names,locations):
     # Create headers for the CSV file
     headers = ['Location'] + field_names
     
     # Prepare data for CSV
     data = []
     for i, r2_location in enumerate(r2_values):
-        location_row = [f'Location_{i+1}']  # Location identifier
+        location_row = [locations[i]]  # Location identifier
         location_row.extend(r2_location)  # Append R-squared values for each field
         data.append(location_row)
 
@@ -91,5 +95,6 @@ def convert_to_csv(output_file, r2_values, field_names):
 if __name__ == "__main__":
     monthly_avg_gt_file = 'outputs/prepare_output.csv'
     monthly_avg_est_file = 'outputs/process_output.csv'
+    locations = get_locations(monthly_avg_est_file)
     r2_values = compute_r2(monthly_avg_gt_file, monthly_avg_est_file)
-    convert_to_csv('outputs/evaluate_output.csv',r2_values,get_field_names(monthly_avg_gt_file))
+    convert_to_csv('outputs/evaluate_output.csv',r2_values,get_field_names(monthly_avg_gt_file),locations)
