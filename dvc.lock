@@ -4,23 +4,23 @@ stages:
     cmd: python source/download.py
     params:
       params/params.yaml:
-        download.n_locs: 3
-        download.seed: 2
-        download.year: 2022
+        download.n_locs: 2
+        download.seed: 1
+        download.year: 2023
     outs:
     - path: data/
       hash: md5
-      md5: 4135a146b23d7bf260d2d28ae36d98ed.dir
-      size: 24907029
-      nfiles: 4
+      md5: 7f560a62de4ddd29c0580999bd63ea0f.dir
+      size: 19162654
+      nfiles: 3
   prepare:
     cmd: python source/prepare.py
     deps:
     - path: data/
       hash: md5
-      md5: 4135a146b23d7bf260d2d28ae36d98ed.dir
-      size: 24907029
-      nfiles: 4
+      md5: 7f560a62de4ddd29c0580999bd63ea0f.dir
+      size: 19162654
+      nfiles: 3
     outs:
     - path: outputs/daily_fields_list.txt
       hash: md5
@@ -28,16 +28,16 @@ stages:
       size: 150
     - path: outputs/prepare_output.csv
       hash: md5
-      md5: f08e496531f56e870dc00964011279e0
-      size: 1639
+      md5: 6cc9fa9ef14f39ff2f1ff900c72b747b
+      size: 1134
   process:
     cmd: python source/process.py
     deps:
     - path: data/
       hash: md5
-      md5: 4135a146b23d7bf260d2d28ae36d98ed.dir
-      size: 24907029
-      nfiles: 4
+      md5: 7f560a62de4ddd29c0580999bd63ea0f.dir
+      size: 19162654
+      nfiles: 3
     - path: outputs/daily_fields_list.txt
       hash: md5
       md5: 2d860d15de5e504c112336693cc93aef
@@ -45,21 +45,21 @@ stages:
     outs:
     - path: outputs/process_output.csv
       hash: md5
-      md5: 7c840e372447445d57b7e63c2c267b50
-      size: 3387
+      md5: 02cd8747e42b5f22db7151266a277035
+      size: 2473
   evaluate:
     cmd: python source/evaluate.py
     deps:
     - path: outputs/prepare_output.csv
       hash: md5
-      md5: f08e496531f56e870dc00964011279e0
-      size: 1639
+      md5: 6cc9fa9ef14f39ff2f1ff900c72b747b
+      size: 1134
     - path: outputs/process_output.csv
       hash: md5
-      md5: 7c840e372447445d57b7e63c2c267b50
-      size: 3387
+      md5: 02cd8747e42b5f22db7151266a277035
+      size: 2473
     outs:
     - path: outputs/evaluate_output.csv
       hash: md5
-      md5: 0cd8fa2725789387ed965b2e41c02f05
-      size: 424
+      md5: 8b4452ddaaf6956b4b81aefd53b32357
+      size: 348
