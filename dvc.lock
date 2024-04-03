@@ -6,10 +6,60 @@ stages:
       params/params.yaml:
         download.n_locs: 1
         download.seed: 2
-        download.year: 2023
+        download.year: 2020
     outs:
     - path: data/
       hash: md5
-      md5: bf8ef82618b82384e3e1598687f4753e.dir
-      size: 8912361
+      md5: c409f8cbb8fe37fcd2c9cbb1c5e42f07.dir
+      size: 10059521
       nfiles: 2
+  prepare:
+    cmd: python source/prepare.py
+    deps:
+    - path: data/
+      hash: md5
+      md5: c409f8cbb8fe37fcd2c9cbb1c5e42f07.dir
+      size: 10059521
+      nfiles: 2
+    outs:
+    - path: outputs/daily_fields_list.txt
+      hash: md5
+      md5: 2d860d15de5e504c112336693cc93aef
+      size: 150
+    - path: outputs/prepare_output.csv
+      hash: md5
+      md5: e5f467f1b7dd362475adc7a6d3ed0814
+      size: 645
+  process:
+    cmd: python source/process.py
+    deps:
+    - path: data/
+      hash: md5
+      md5: c409f8cbb8fe37fcd2c9cbb1c5e42f07.dir
+      size: 10059521
+      nfiles: 2
+    - path: outputs/daily_fields_list.txt
+      hash: md5
+      md5: 2d860d15de5e504c112336693cc93aef
+      size: 150
+    outs:
+    - path: outputs/process_output.csv
+      hash: md5
+      md5: bebea1ef49d6d0fc6ec897a4227a4ce9
+      size: 1339
+  evaluate:
+    cmd: python source/evaluate.py
+    deps:
+    - path: outputs/prepare_output.csv
+      hash: md5
+      md5: e5f467f1b7dd362475adc7a6d3ed0814
+      size: 645
+    - path: outputs/process_output.csv
+      hash: md5
+      md5: bebea1ef49d6d0fc6ec897a4227a4ce9
+      size: 1339
+    outs:
+    - path: outputs/evaluate_output.csv
+      hash: md5
+      md5: 4c4f73dfc6545ec4e7f9c5cf61121188
+      size: 239
