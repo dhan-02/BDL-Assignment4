@@ -4,16 +4,28 @@ import pandas as pd
 import numpy as np
 
 def extract_monthly_averages(folder_path, monthly_avg_fields):
+    """
+    Extracts monthly averages for specified fields from CSV files in the given folder path.
+
+    Args:
+    - folder_path (str): Path to the folder containing CSV files.
+    - monthly_avg_fields (list of str): List of field names for which monthly averages are to be extracted.
+
+    Returns:
+    - monthly_averages_list (list of dict): List of dictionaries containing monthly averages for each field.
+    - locations (list of str): List of location names extracted from file names.
+    """
     monthly_averages_list = []  # List to store monthly averages for each CSV file
+    locations = []  # List to store location names extracted from file names
     
-    locations = []
     # Iterate through each CSV file in the folder
     for file_name in sorted(os.listdir(folder_path)):
         if file_name.endswith('.csv'):
             file_path = os.path.join(folder_path, file_name)
-            locations.append(file_name[:-4])
+            locations.append(file_name[:-4])  # Extract location name from file name
+            
             # Read the CSV file into a DataFrame
-            df = pd.read_csv(file_path,low_memory=False)
+            df = pd.read_csv(file_path, low_memory=False)
 
             # Define the regex pattern to match any number followed by 's'
             pattern = r'(\d+)s'
@@ -50,9 +62,19 @@ def extract_monthly_averages(folder_path, monthly_avg_fields):
             # Append the dictionary containing monthly averages for the current CSV file to the list
             monthly_averages_list.append(monthly_averages)
     
-    return monthly_averages_list,locations
+    return monthly_averages_list, locations
 
-def create_csv_from_dict(data_list,locations):
+def create_csv_from_dict(data_list, locations):
+    """
+    Creates a CSV file from a list of dictionaries containing monthly averages.
+
+    Args:
+    - data_list (list of dict): List of dictionaries containing monthly averages for each field.
+    - locations (list of str): List of location names corresponding to the data.
+
+    Returns:
+    - None
+    """
     # Get the field names from the keys of the dictionary
     field_names = ['Location'] + ['Month'] + list(data_list[0].keys())  # Include 'Location' and 'Month' as the first and second field
     
@@ -69,33 +91,28 @@ def create_csv_from_dict(data_list,locations):
         # Write monthly averages for each field from each CSV file
         for location, data_dict in zip(locations, data_list):
             for month in range(1, 13):
-                row_data = {'Location':location,'Month': month}  # Add 'Month' value to the row data
+                row_data = {'Location': location, 'Month': month}  # Add 'Month' value to the row data
                 for field, monthly_avg_list in data_dict.items():
-                    if(len(monthly_avg_list)==0):
+                    if len(monthly_avg_list) == 0:
                         row_data[field] = np.nan
                     else:
                         row_data[field] = monthly_avg_list[month - 1]  # Month is 0-indexed
                 # Write row to CSV
                 writer.writerow(row_data)
 
-
 if __name__ == "__main__":
-
+    # Define input parameters
     folder_path = 'data'
-
     all_daily_avg_fields = ['DailyAverageDryBulbTemperature', 
                             'DailyMaximumDryBulbTemperature', 
                             'DailyMinimumDryBulbTemperature',
                             'DailyAverageSeaLevelPressure',
                             'DailyAverageStationPressure']
-
-
     all_monthly_avg_fields = ['MonthlyMeanTemperature', 
                               'MonthlyMaximumTemperature', 
                               'MonthlyMinimumTemperature',
                               'MonthlySeaLevelPressure', 
                               'MonthlyStationPressure',]
-
     text_file_path = 'outputs/daily_fields_list.txt'
 
     # Write the list to a text file
@@ -103,6 +120,8 @@ if __name__ == "__main__":
         for field in all_daily_avg_fields:
             text_file.write(field + '\n')    
     
-    # valid_daily_avg_fields,valid_monthly_avg_fields = get_valid_fields(all_daily_avg_fields,all_monthly_avg_fields)
-    monthly_averages,locations = extract_monthly_averages(folder_path, all_monthly_avg_fields)
-    create_csv_from_dict(monthly_averages,locations)
+    # Extract monthly averages and location names
+    monthly_averages, locations = extract_monthly_averages(folder_path, all_monthly_avg_fields)
+    
+    # Create CSV from the extracted data
+    create_csv_from_dict(monthly_averages, locations)
