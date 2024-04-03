@@ -1,5 +1,0 @@
-DailyAverageDryBulbTemperature
-DailyMaximumDryBulbTemperature
-DailyMinimumDryBulbTemperature
-DailyAverageSeaLevelPressure
-DailyAverageStationPressure
