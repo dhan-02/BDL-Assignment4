@@ -1,0 +1,15 @@
+schema: '2.0'
+stages:
+  download:
+    cmd: python source/download.py
+    params:
+      params/params.yaml:
+        download.n_locs: 1
+        download.seed: 2
+        download.year: 2023
+    outs:
+    - path: data/
+      hash: md5
+      md5: bf8ef82618b82384e3e1598687f4753e.dir
+      size: 8912361
+      nfiles: 2
