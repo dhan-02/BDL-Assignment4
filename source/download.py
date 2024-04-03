@@ -31,6 +31,10 @@ def get_all_file_names(datafile_path):
         return data_links
 
 def download_html(base_url,year):
+
+    bash_command = "mkdir data/"
+    os.system(bash_command)
+    
     current_dir = os.getcwd()
     bash_command = "wget -O {}/data/data_store.html {}access/{}".format(current_dir, base_url, year)
     # Execute the Bash command using os.system
@@ -42,7 +46,7 @@ def is_valid_file(file_path,daily_avg_fields,monthly_avg_fields):
     df = pd.read_csv(file_path,low_memory=False)
     for daily_field, monthly_field in zip(daily_avg_fields, monthly_avg_fields):
         if not df[daily_field].dropna().empty and not df[monthly_field].dropna().empty:
-            print("Sucess : File Found")
+            print("Success : File Found")
             return True
     print("Fail")
     return False

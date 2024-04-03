@@ -1,4 +1,0 @@
-[core]
-    remote = loc_remote
-['remote "loc_remote"']
-    url = /home/dhan/dvc_storage
